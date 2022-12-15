@@ -55,12 +55,76 @@ namespace webapibackend.Controllers
 
         // PUT: api/Appointments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /*
+         *We use PUT for updating existing records.
+         *In this app, we use it to reschedule appointments.
+         */
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAppointment(long id, Appointment appointment)
         {
             if (id != appointment.Id)
             {
                 return BadRequest();
+            }
+            ValueTask<Guest?> guestTask = _guestContext.Guests.FindAsync(appointment.GuestId);
+            ValueTask<Staff?> staffTask = _staffContext.Staffs.FindAsync(appointment.StaffId);
+            ValueTask<Service?> serviceTask = _serviceContext.Services.FindAsync(appointment.ServiceId);
+            Guest? guest = await guestTask;
+            Staff? staff = await staffTask;
+            Service? service = await serviceTask;
+            if (guest == null)
+            {
+                Console.WriteLine("No Guest!");
+                return NotFound();
+            }
+            if (staff == null)
+            {
+                Console.WriteLine("No Staff!");
+                return NotFound();
+            }
+            if (service == null)
+            {
+                Console.WriteLine("No Service!");
+                return NotFound();
+            }
+
+            
+            DateTime newStartDate = appointment.StartDate;
+            DateTime newEndDate = appointment.EndDate;
+            if(newStartDate > newEndDate)
+            {
+                return Conflict();
+            }
+            bool alreadyBooked = false;
+            List<Appointment> appointments = await _context
+                .Appointments
+                .Where(a => 
+                a.StaffId == appointment.StaffId && 
+                a.Id != appointment.Id)
+                .ToListAsync();
+            for(int i = 0; i < appointments.Count; i++)
+            {
+                Appointment currentAppointment = appointments[i];
+                if(currentAppointment.Id == appointment.Id)
+                {//this is the appointment we are modifying, so we do not check for schedule conflicts.
+                    continue;
+                }
+                DateTime existingStartDate = appointments[i].StartDate;
+                DateTime existingEndDate = appointments[i].EndDate;
+                if (//checks to see if the date ranges overlap.
+                    (newStartDate >= existingStartDate && newStartDate <= existingEndDate) ||
+                    (newEndDate >= existingStartDate && newEndDate <= existingEndDate) ||
+                    (existingStartDate >= newStartDate && existingStartDate <= newEndDate) ||
+                    (existingEndDate >= newStartDate && existingEndDate <= newEndDate)
+                )
+                {
+                    alreadyBooked = true;
+                }
+            }
+            if(alreadyBooked)
+            {
+                Console.WriteLine("Already Booked!");
+                return Conflict();
             }
 
             _context.Entry(appointment).State = EntityState.Modified;
@@ -110,9 +174,17 @@ namespace webapibackend.Controllers
                 Console.WriteLine("No Service!");
                 return NotFound();
             }
+            
+            DateTime newStartDate = appointment.StartDate;
+            DateTime newEndDate = appointment.EndDate;
+            if (newStartDate > newEndDate)
+            {//start date can't be after end date.
+                Console.WriteLine("Invalid date range!");
+                return Conflict();
+            }
             bool alreadyBooked = false;
             List<Appointment> appointments = await _context.Appointments.Where(a => a.StaffId == appointment.StaffId).ToListAsync();
-            for(int i = 0; i < appointments.Count(); i++)
+            for(int i = 0; i < appointments.Count; i++)
             {
                 Console.WriteLine("Id: " + appointments[i].Id);
                 Console.WriteLine("Start Date: " + appointments[i].StartDate);
@@ -120,13 +192,6 @@ namespace webapibackend.Controllers
                 Console.WriteLine("Staff Id: " + appointments[i].StaffId);
                 DateTime existingStartDate = appointments[i].StartDate;
                 DateTime existingEndDate = appointments[i].EndDate;
-                DateTime newStartDate = appointment.StartDate;
-                DateTime newEndDate = appointment.EndDate;
-                if(newStartDate > newEndDate)
-                {//start date can't be after end date.
-                    Console.WriteLine("Invalid date range!");
-                    return Conflict();
-                }
                 if(//checks to see if the date ranges overlap.
                     (newStartDate >= existingStartDate && newStartDate <= existingEndDate) ||
                     (newEndDate >= existingStartDate && newEndDate <= existingEndDate) ||
@@ -136,7 +201,6 @@ namespace webapibackend.Controllers
                 {
                     alreadyBooked = true;
                 }
-
             }
             if (alreadyBooked)
             {
