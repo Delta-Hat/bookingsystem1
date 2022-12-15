@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -109,7 +110,7 @@ namespace webapibackend.Controllers
                 Console.WriteLine("No Service!");
                 return NotFound();
             }
-            bool isBooked = false;
+            bool alreadyBooked = false;
             List<Appointment> appointments = await _context.Appointments.Where(a => a.StaffId == appointment.StaffId).ToListAsync();
             for(int i = 0; i < appointments.Count(); i++)
             {
@@ -117,11 +118,30 @@ namespace webapibackend.Controllers
                 Console.WriteLine("Start Date: " + appointments[i].StartDate);
                 Console.WriteLine("End Data: " + appointments[i].EndDate);
                 Console.WriteLine("Staff Id: " + appointments[i].StaffId);
+                DateTime existingStartDate = appointments[i].StartDate;
+                DateTime existingEndDate = appointments[i].EndDate;
+                DateTime newStartDate = appointment.StartDate;
+                DateTime newEndDate = appointment.EndDate;
+                if(newStartDate > newEndDate)
+                {//start date can't be after end date.
+                    Console.WriteLine("Invalid date range!");
+                    return Conflict();
+                }
+                if(//checks to see if the date ranges overlap.
+                    (newStartDate >= existingStartDate && newStartDate <= existingEndDate) ||
+                    (newEndDate >= existingStartDate && newEndDate <= existingEndDate) ||
+                    (existingStartDate >= newStartDate && existingStartDate <= newEndDate) ||
+                    (existingEndDate >= newStartDate && existingEndDate <= newEndDate)
+                )
+                {
+                    alreadyBooked = true;
+                }
+
             }
-            if (isBooked)
+            if (alreadyBooked)
             {
                 Console.WriteLine("Already Booked!");
-                return NotFound();
+                return Conflict();
             }
             else
             {
