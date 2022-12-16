@@ -28,18 +28,22 @@ export default class Guest extends Component {
                             <Typography variant="body1">
                                 {this.state.guest.firstName} {this.state.guest.lastName}
                             </Typography>
-                            <Typography variant="body2">
+                            
                                 <Stack direction="row" spacing={1}>
-                                    <LocalPhoneOutlinedIcon />
-                                    <Box>{this.state.guest.phoneNumber}</Box>
+                                <LocalPhoneOutlinedIcon />
+                                <Typography variant="body2">
+                                    {this.state.guest.phoneNumber}
+                                </Typography>
                                 </Stack> 
-                            </Typography>
-                            <Typography variant="body2">
+                            
+                            
                                 <Stack direction="row" spacing={1}>
-                                    <EmailOutlinedIcon/>
-                                    <Box>{this.state.guest.email}</Box>
+                                <EmailOutlinedIcon />
+                                <Typography variant="body2">
+                                    {this.state.guest.email}
+                                </Typography>
                                 </Stack>
-                            </Typography>
+                            
                         </Stack>
                     </CardContent>
                 </Card>

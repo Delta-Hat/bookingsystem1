@@ -75,17 +75,17 @@ namespace webapibackend.Controllers
             if (guest == null)
             {
                 Console.WriteLine("No Guest!");
-                return NotFound();
+                return Conflict();
             }
             if (staff == null)
             {
                 Console.WriteLine("No Staff!");
-                return NotFound();
+                return Conflict();
             }
             if (service == null)
             {
                 Console.WriteLine("No Service!");
-                return NotFound();
+                return Conflict();
             }
 
             
@@ -162,17 +162,17 @@ namespace webapibackend.Controllers
             if(guest == null)
             {
                 Console.WriteLine("No Guest!");
-                return NotFound();
+                return Conflict();
             }
             if(staff == null)
             {
                 Console.WriteLine("No Staff!");
-                return NotFound();
+                return Conflict();
             }
             if(service == null)
             {
                 Console.WriteLine("No Service!");
-                return NotFound();
+                return Conflict();
             }
             
             DateTime newStartDate = appointment.StartDate;
