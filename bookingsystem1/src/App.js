@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import DebugList from './DebugList';
+import GuestList from './GuestList';
+import Stack from '@mui/material/Stack';
 
 export default class App extends Component {
     static displayName = App.name;
@@ -19,9 +21,10 @@ export default class App extends Component {
 
         return (
             <div>
-                
-
-                <DebugList></DebugList>
+                <Stack direction="row" spacing={1}>
+                    <GuestList />
+                </Stack>
+                <DebugList/>
             </div>
         );
     }
