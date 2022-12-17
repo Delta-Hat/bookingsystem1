@@ -23,12 +23,12 @@ export default class Staff extends Component {
                                 {this.state.staff.firstName} {this.state.staff.lastName}
                             </Typography>
                             <Typography variant="body2">
-                                { '\u2022'} {this.state.staff.jobTitle}
+                                {'\u2022'} {this.state.staff.jobTitle}
                             </Typography>
                         </Stack>
                     </CardContent>
                 </Card>
             </div>
-        )
+        );
     }
 }
