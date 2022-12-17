@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
-import Box from '@mui/material/Box';
+//import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 export default class Guest extends Component {
@@ -11,7 +11,7 @@ export default class Guest extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { guest: props.guest, loading: true };
+        this.state = { guest: props.guest};
     }
 
     render() {
@@ -29,20 +29,20 @@ export default class Guest extends Component {
                                 {this.state.guest.firstName} {this.state.guest.lastName}
                             </Typography>
                             
-                                <Stack direction="row" spacing={1}>
+                            <Stack direction="row" spacing={1}>
                                 <LocalPhoneOutlinedIcon />
                                 <Typography variant="body2">
                                     {this.state.guest.phoneNumber}
                                 </Typography>
-                                </Stack> 
+                            </Stack> 
                             
                             
-                                <Stack direction="row" spacing={1}>
+                            <Stack direction="row" spacing={1}>
                                 <EmailOutlinedIcon />
                                 <Typography variant="body2">
                                     {this.state.guest.email}
                                 </Typography>
-                                </Stack>
+                            </Stack>
                             
                         </Stack>
                     </CardContent>

@@ -48,12 +48,12 @@ export default class GuestList extends Component {
 
     handleCreateNewGuest = async () => {
         console.log("GuestList.handleCreateNewGuest()");
-        var firstNameInput = document.getElementById("firstName").value;
-        var lastNameInput = document.getElementById("lastName").value;
-        var phoneNumberInput = document.getElementById("phoneNumber").value;
-        var emailInput = document.getElementById("email").value;
+        var firstNameInput = document.getElementById("firstName-guest").value;
+        var lastNameInput = document.getElementById("lastName-guest").value;
+        var phoneNumberInput = document.getElementById("phoneNumber-guest").value;
+        var emailInput = document.getElementById("email-guest").value;
         console.log(firstNameInput + " " + lastNameInput + " " + phoneNumberInput + " " + emailInput);
-        if (firstNameInput == "" || lastNameInput == "") {
+        if (firstNameInput == "" || lastNameInput == "" || firstNameInput == null || lastNameInput == null) {
             return;
         }
         const response = await fetch("api/guests", {
@@ -84,7 +84,7 @@ export default class GuestList extends Component {
                 <Card sx={{minHeight: 600, minWidth:260} }>
                     <CardContent>
                         <Stack
-                            divider={<Divider orientation="horizontal" flexItem/> }
+                            divider={<Divider orientation="horizontal" flexItem />} spacing={0.3 }
                         >
                             <Typography variant="h5">
                                 Guests
@@ -110,26 +110,26 @@ export default class GuestList extends Component {
                 <Dialog open={this.state.creatingNewGuest} onClose={this.handleCloseNewGuestMenu} >
                     <DialogTitle>Create New Guest</DialogTitle>
                     <DialogContent>
-                        <DialogContentText>Enter Guest info.</DialogContentText>
+                        <DialogContentText>Enter guest info.</DialogContentText>
                     </DialogContent>
                     <Stack spacing={1}>
                         <TextField
-                            id="firstName"
+                            id="firstName-guest"
                             label="First Name"
                             required
                         />
                         <TextField
-                            id="lastName"
+                            id="lastName-guest"
                             label="Last Name"
                             required
                         />
                         <TextField
-                            id="phoneNumber"
+                            id="phoneNumber-guest"
                             label="Phone Number"
                             type="tel"
                         />
                         <TextField
-                            id="email"
+                            id="email-guest"
                             label="Email"
                             type="email"
                         />
@@ -151,7 +151,7 @@ export default class GuestList extends Component {
                     {guests.map(guest =>
                         <tr key={guest.id}>
                             <td>
-                                <Guest guest={guest }/>
+                                <Guest guest={guest}/>
                             </td>
                         </tr>
                     )}
