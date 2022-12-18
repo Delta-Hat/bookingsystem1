@@ -9,7 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 //import InputAdornment from '@mui/material/InputAdornment';
-//import Box from '@mui/material/Box';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -83,28 +83,31 @@ export default class GuestList extends Component {
             <div>
                 <Card sx={{minHeight: 600, minWidth:260} }>
                     <CardContent>
-                        <Stack
-                            divider={<Divider orientation="horizontal" flexItem />} spacing={0.3 }
-                        >
-                            <Typography variant="h5">
-                                Guests
-                            </Typography>
-                            <Grid container position="relative">
-                                <Grid container justifyContent="center" direction="row">
-                                    {guestList}
+                        <Box sx={{minHeight:490} }>
+                            <Stack
+                                divider={<Divider orientation="horizontal" flexItem />} spacing={0.3 }
+                            >
+                                <Typography variant="h5">
+                                    Guests
+                                </Typography>
+                                <Grid container position="relative">
+                                    <Grid container justifyContent="center" direction="row">
+                                        {guestList}
+                                    </Grid> 
                                 </Grid>
-                                
-                                <Grid container justifyContent="center" alignItems="flex-end" direction="row" >
-                                    <Fab
-                                        color="primary"
-                                        aria-label="add"
-                                        style={{ textAlign: "center" }}
-                                        onClick={this.handleOpenNewGuestMenu} >
-                                        <AddIcon />
-                                    </Fab>
-                                </Grid>
+                            </Stack>
+                        </Box>
+                        <Box sx={{mt:2}} display="flex" alignItem="flex-end">
+                            <Grid container justifyContent="center" alignItems="flex-end" direction="row" >
+                                <Fab
+                                    color="primary"
+                                    aria-label="add"
+                                    style={{ textAlign: "center" }}
+                                    onClick={this.handleOpenNewGuestMenu} >
+                                    <AddIcon />
+                                </Fab>
                             </Grid>
-                        </Stack>
+                        </Box>
                     </CardContent>
                 </Card>
                 <Dialog open={this.state.creatingNewGuest} onClose={this.handleCloseNewGuestMenu} >
