@@ -103,5 +103,25 @@ namespace webapibackend.Controllers
         {
             return _context.Services.Any(e => e.Id == id);
         }
+
+        private static ServiceDTO ServiceToDTO(Service service)
+        {
+            return new ServiceDTO
+            {
+                Id = service.Id,
+                Name = service.Name,
+                Price = service.Price.ToString()
+            };
+        }
+
+        private static Service DTOToService(ServiceDTO serviceDTO)
+        {
+            return new Service
+            {
+                Id = serviceDTO.Id,
+                Name = serviceDTO.Name,
+                Price = System.Convert.ToDecimal(serviceDTO.Price)
+            };
+        }
     }
 }

@@ -51,7 +51,8 @@ export default class ServiceList extends Component {
         console.log("ServiceList.handleCreateNewService()");
         var nameInput = document.getElementById("name-service").value;
         var categoryInput = document.getElementById("category-service").value;
-        var priceInput = parseFloat(document.getElementById("price-service").value);
+        //var priceInput = parseInt(document.getElementById("price-service").value);
+        var priceInput = document.getElementById("price-service").value;
         console.log(nameInput + " " + categoryInput + " " + priceInput);
         if (
             nameInput == "" || nameInput == null ||
@@ -68,22 +69,21 @@ export default class ServiceList extends Component {
         const response = await fetch("api/services", {
             method: "POST",
             headers: {
-                "Content-Type": "applications/json",
+                "Content-Type": "application/json",
                 "accept": "text/plain"
             },
-            body: JSON.stringify(postBody)
+            body: JSON.stringify({
+                name: nameInput,
+                category: categoryInput,
+                price: priceInput
+            })
         });
         console.log(JSON.stringify({
             name: nameInput,
             category: categoryInput,
             price: priceInput 
         }));
-        console.log(JSON.stringify(postBody));
-        console.log(response.headers);
-        console.log(response.json());
-        console.log(response.type);
-        console.log(response.status);
-        console.log(response.body);
+        
         this.populateServiceData();
         this.setState({ creatingNewService: false });
     }
@@ -119,7 +119,7 @@ export default class ServiceList extends Component {
             <div>
                 <Card sx={{ minHeight: 600, minWidth: 260 }}>
                     <CardContent>
-                        <Stack divider={<Divider orientation />} spacing={0.3}>
+                        <Stack divider={<Divider orientation="horizontal" flexItem />} spacing={0.3}>
                             <Typography variant="h5">
                                 Services
                             </Typography>
