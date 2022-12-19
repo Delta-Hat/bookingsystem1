@@ -100,7 +100,7 @@ export default class App extends Component {
                         loadingServices={this.state.loadingServices}
                     />
                 </Stack>
-                <DebugList/>
+                { /*<DebugList/>*/}
             </div>
         );
     }
