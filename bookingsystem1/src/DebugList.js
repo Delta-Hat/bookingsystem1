@@ -28,7 +28,7 @@ export default class DebugList extends Component {
     }
 
     render() {
-        console.log('render()');
+        console.log('DebugList.render()');
         let guestTable = this.state.loadingGuests
             ? <p>Loading Guests...</p>
             : DebugList.renderGuestTable(this.state.guests);

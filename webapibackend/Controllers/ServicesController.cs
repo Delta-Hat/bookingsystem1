@@ -29,7 +29,7 @@ namespace webapibackend.Controllers
 
         // GET: api/Services/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Service>> GetService(int id)
+        public async Task<ActionResult<Service>> GetService(long id)
         {
             var service = await _context.Services.FindAsync(id);
 
@@ -44,7 +44,7 @@ namespace webapibackend.Controllers
         // PUT: api/Services/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutService(int id, Service service)
+        public async Task<IActionResult> PutService(long id, Service service)
         {
             if (id != service.Id)
             {
@@ -85,7 +85,7 @@ namespace webapibackend.Controllers
 
         // DELETE: api/Services/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteService(int id)
+        public async Task<IActionResult> DeleteService(long id)
         {
             var service = await _context.Services.FindAsync(id);
             if (service == null)
@@ -99,7 +99,7 @@ namespace webapibackend.Controllers
             return NoContent();
         }
 
-        private bool ServiceExists(int id)
+        private bool ServiceExists(long id)
         {
             return _context.Services.Any(e => e.Id == id);
         }

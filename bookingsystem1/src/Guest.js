@@ -11,7 +11,7 @@ export default class Guest extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { guest: props.guest};
+        //this.state = { guest: props.guest};
     }
 
     render() {
@@ -26,13 +26,13 @@ export default class Guest extends Component {
                     <CardContent>
                         <Stack spacing={0.3}>
                             <Typography variant="body1">
-                                {this.state.guest.firstName} {this.state.guest.lastName}
+                                {this.props.guest.firstName} {this.props.guest.lastName}
                             </Typography>
                             
                             <Stack direction="row" spacing={1}>
                                 <LocalPhoneOutlinedIcon />
                                 <Typography variant="body2">
-                                    {this.state.guest.phoneNumber}
+                                    {this.props.guest.phoneNumber}
                                 </Typography>
                             </Stack> 
                             
@@ -40,7 +40,7 @@ export default class Guest extends Component {
                             <Stack direction="row" spacing={1}>
                                 <EmailOutlinedIcon />
                                 <Typography variant="body2">
-                                    {this.state.guest.email}
+                                    {this.props.guest.email}
                                 </Typography>
                             </Stack>
                             

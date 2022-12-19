@@ -23,9 +23,11 @@ export default class GuestList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { guests: [], loading: true, creatingNewGuest: false };
+        this.state = { guests: [], loading: true, creatingNewGuest: false, overState:props.overState };
         //this.handleCloseNewGuestMenu = this.handleCloseNewGuestMenu.bind(this);
         //this.handleOpenNewGuestMenu = this.handleOpenNewGuestMenu.bind(this);
+        this.appFunction = props.listeners.guestListener;
+
     }
 
     componentDidMount() {
@@ -33,12 +35,15 @@ export default class GuestList extends Component {
     }
 
     componentDidUpdate() {
+        //TODO update list
         console.log("GuestList.componentDidUpdate()")
+        //this.setState({ overState: this.props.overState });
     }
 
     handleOpenNewGuestMenu = () => {
         console.log("GuestList.handleOpenNewGuestMenu()");
         this.setState({ creatingNewGuest: true });
+        this.appFunction();
     };
 
     handleCloseNewGuestMenu = () => {
@@ -76,28 +81,31 @@ export default class GuestList extends Component {
     };
 
     render() {
+        console.log("GuestList.render()");
+        console.log("Test state at sub render: " + this.state.overState);
+        console.log("Test props at sub render: " + this.props.overState);
         let guestList = this.state.loading
             ? <CircularProgress />
             : GuestList.renderGuests(this.state.guests);
         return (
             <div>
-                <Card sx={{minHeight: 600, minWidth:260} }>
+                <Card sx={{ minHeight: 600, minWidth:260 }}>
                     <CardContent>
-                        <Box sx={{minHeight:490} }>
+                        <Box sx={{ minHeight:490 }}>
                             <Stack
                                 divider={<Divider orientation="horizontal" flexItem />} spacing={0.3 }
                             >
                                 <Typography variant="h5">
                                     Guests
                                 </Typography>
-                                <Grid container position="relative">
+                                
                                     <Grid container justifyContent="center" direction="row">
                                         {guestList}
                                     </Grid> 
-                                </Grid>
+                                
                             </Stack>
                         </Box>
-                        <Box sx={{mt:2}} display="flex" alignItem="flex-end">
+                        <Box sx={{mt:2}} display="flex" alignItems="flex-end">
                             <Grid container justifyContent="center" alignItems="flex-end" direction="row" >
                                 <Fab
                                     color="primary"

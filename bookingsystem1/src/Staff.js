@@ -10,7 +10,7 @@ export default class Staff extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { staff: props.staff };
+        //this.state = { staff: props.staff };
     }
 
     render() {
@@ -20,10 +20,10 @@ export default class Staff extends Component {
                     <CardContent>
                         <Stack spacing={0.3}>
                             <Typography variant="body1">
-                                {this.state.staff.firstName} {this.state.staff.lastName}
+                                {this.props.staff.firstName} {this.props.staff.lastName}
                             </Typography>
                             <Typography variant="body2">
-                                {'\u2022'} {this.state.staff.jobTitle}
+                                {'\u2022'} {this.props.staff.jobTitle}
                             </Typography>
                         </Stack>
                     </CardContent>

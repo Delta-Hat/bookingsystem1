@@ -19,10 +19,10 @@ export default class Service extends Component {
                     <CardContent>
                         <Stack spacing={0.3}>
                             <Typography variant="body1">
-                                {this.state.service.name}
+                                {this.props.service.name}
                             </Typography>
                             <Typography variant="body2">
-                                {'\u2022'} {this.state.service.category} {'\u2022'} ${this.state.service.price }
+                                {'\u2022'} {this.props.service.category} {'\u2022'} ${this.props.service.price }
                             </Typography>
                         </Stack>
                     </CardContent>
