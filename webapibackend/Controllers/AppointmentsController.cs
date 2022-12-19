@@ -40,7 +40,7 @@ namespace webapibackend.Controllers
         }
 
         // GET: api/Appointments/5
-        [HttpGet("{id}")]
+        [HttpGet("byid/{id}")]
         public async Task<ActionResult<Appointment>> GetAppointment(long id)
         {
             var appointment = await _context.Appointments.FindAsync(id);
@@ -53,7 +53,23 @@ namespace webapibackend.Controllers
             return appointment;
         }
 
-        
+        [HttpGet("bydate/{startDate}")]
+        public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointments(DateTime startDate)
+        {
+            try { 
+            return await _context.Appointments
+                .Where(a => 
+                a.StartDate.Year == startDate.Year &&
+                a.StartDate.Month == startDate.Month &&
+                a.StartDate.Day == startDate.Day
+                ).ToListAsync();
+            } catch (Exception e)
+            {
+                Console.WriteLine("Exception!");
+                Console.WriteLine(e);
+            }
+            return null!;
+        }
 
         // PUT: api/Appointments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -61,7 +77,7 @@ namespace webapibackend.Controllers
          *We use PUT for updating existing records.
          *In this app, we use it to reschedule appointments.
          */
-        [HttpPut("{id}")]
+        [HttpPut("byid/{id}")]
         public async Task<IActionResult> PutAppointment(long id, Appointment appointment)
         {
             if (id != appointment.Id)
@@ -220,7 +236,7 @@ namespace webapibackend.Controllers
         }
 
         // DELETE: api/Appointments/5
-        [HttpDelete("{id}")]
+        [HttpDelete("byid{id}")]
         public async Task<IActionResult> DeleteAppointment(long id)
         {
             var appointment = await _context.Appointments.FindAsync(id);

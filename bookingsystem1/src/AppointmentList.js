@@ -169,7 +169,7 @@ export default class AppointmentList extends Component {
         var dateObj = new Date(dateUnix);
         console.log(dateObj.toString());
         var date = dateObj.getFullYear()
-            + "-" + ((dateObj.getMonth() + 1) < 10 ? "0" + (dateObj.getMonth() + 1) : (dateObj.getMonth()))
+            + "-" + ((dateObj.getMonth() + 1) < 10 ? "0" + (dateObj.getMonth() + 1) : (dateObj.getMonth())+1)
                 + "-" + (dateObj.getDate() < 10 ? "0" + dateObj.getDate() : dateObj.getDate());
         this.setState({ dateInput: date });
         console.log("Date Input: " + date);

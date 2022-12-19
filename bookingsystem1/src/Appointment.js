@@ -105,7 +105,7 @@ export default class Appointment extends Component {
     handleEditAppointment =  async () => {
         console.log("Appointment.handleEditAppointment()");
 
-        const response = await fetch("api/appointments/" + this.state.appointment.id, {
+        const response = await fetch("api/appointments/byid/" + this.state.appointment.id, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
