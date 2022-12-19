@@ -16,7 +16,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { CircularProgress } from '../node_modules/@mui/material/index';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 export default class StaffList extends Component {
     static displayName = StaffList.name;
@@ -100,26 +101,30 @@ export default class StaffList extends Component {
             <div>
                 <Card sx={{ minHeight: 600, minWidth: 260 }}>
                     <CardContent>
-                        <Stack divider={<Divider orientation="horizontal" flexItem />} spacing={0.3}>
-                            <Typography variant="h5">
-                                Staff
-                            </Typography>
-                            <Grid container position="relative">
-                                <Grid container justifyContent="center" alignItems="flex-end" direction="row">
-                                    {staffList}
+                        <Box sx={{minHeight:490} }>
+                            <Stack divider={<Divider orientation="horizontal" flexItem />} spacing={0.3}>
+                                <Typography variant="h5">
+                                    Staff
+                                </Typography>
+                                <Grid container position="relative">
+                                    <Grid container justifyContent="center" alignItems="flex-end" direction="row">
+                                        {staffList}
+                                    </Grid>
                                 </Grid>
-                                <Grid container justifyContent="center" alignItems="flex-end" direction="row">
-                                    <Fab
-                                        color="primary"
-                                        aria-label="add"
-                                        style={{ textAlign: "center" }}
-                                        onClick={this.handleOpenNewStaffMenu }
-                                    >
-                                        <AddIcon/>
-                                    </Fab>
-                                </Grid>
+                            </Stack>
+                        </Box>
+                        <Box sx={{ mt: 2 }} display="flex" alignItems="flex-end">
+                            <Grid container justifyContent="center" alignItems="flex-end" direction="row">
+                                <Fab
+                                    color="primary"
+                                    aria-label="add"
+                                    style={{ textAlign: "center" }}
+                                    onClick={this.handleOpenNewStaffMenu}
+                                >
+                                    <AddIcon />
+                                </Fab>
                             </Grid>
-                        </Stack>
+                        </Box>
                     </CardContent>
                 </Card>
                 <Dialog open={this.state.creatingNewStaff} onClose={this.handleCloseNewStaffMenu}>

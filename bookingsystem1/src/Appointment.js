@@ -10,6 +10,20 @@ import Fab from '@mui/material/Fab';
 import Stack from '@mui/material/Stack';
 //import InputAdornment from '@mui/material/InputAdornment';
 import Box from '@mui/material/Box';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 
 export default class Appointment extends Component {
@@ -67,7 +81,96 @@ export default class Appointment extends Component {
             loadingGuest: true,
             loadingStaff: true,
             loadingService: true,
+            editing: false,
+            dateUnixInput: null,
+            dateInput: "",
+            startTimeUnixInput: null,
+            startTimeInput: "",
+            endTimeUnixInput: null,
+            endTimeInput: ""
         };
+        this.requeryAppointmentData = props.listeners.appointmentListener;
+    }
+
+    handleOpenEditMenu = () => {
+        console.log("Appointment.handleOpenEditMenu()");
+        this.setState({ editing: true });
+    }
+
+    handleCloseEditMenu = () => {
+        console.log("Appointment.handleCloseEditMenu()");
+        this.setState({ editing: false });
+    }
+
+    handleEditAppointment =  async () => {
+        console.log("Appointment.handleEditAppointment()");
+
+        const response = await fetch("api/appointments/" + this.state.appointment.id, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "accept": "text/plain"
+            },
+            body: JSON.stringify({
+                id: this.state.appointment.id,
+                guestId: this.state.appointment.guestId,
+                staffId: this.state.appointment.staffId,
+                serviceId: this.state.appointment.serviceId,
+                startDate: this.state.dateInput + "T" + this.state.startTimeInput,
+                endDate: this.state.dateInput + "T" + this.state.endTimeInput
+            })
+        });
+        console.log(JSON.stringify({
+            id: this.state.appointment.id,
+            guestId: this.state.appointment.guestId,
+            staffId: this.state.appointment.staffId,
+            serviceId: this.state.appointment.serviceId,
+            startDate: this.state.dateInput + "T" + this.state.startTimeInput,
+            endDate: this.state.dateInput + "T" + this.state.endTimeInput
+        }));
+        console.log(response.status);
+        this.requeryAppointmentData();
+        this.setState({ editing: false });
+    }
+
+    handleChangeDateInput = (dateUnix) => {
+        console.log("AppointmentList.handleChangeDateInput()");
+        console.log("Date Unix Input: " + dateUnix);
+        //console.log("Year: " + date.y);
+        this.setState({ dateUnixInput: dateUnix });
+        var dateObj = new Date(dateUnix);
+        console.log(dateObj.toString());
+        var date = dateObj.getFullYear()
+            + "-" + ((dateObj.getMonth() + 1) < 10 ? "0" + (dateObj.getMonth() + 1) : (dateObj.getMonth()))
+            + "-" + (dateObj.getDate() < 10 ? "0" + dateObj.getDate() : dateObj.getDate());
+        this.setState({ dateInput: date });
+        console.log("Date Input: " + date);
+    }
+
+    handleChangeStartTimeInput = (timeUnix) => {
+        console.log("AppointmentList.handleChangeStartTimeInput()");
+        console.log("Time Unix Input: " + timeUnix);
+        this.setState({ startTimeUnixInput: timeUnix });
+        var dateObj = new Date(timeUnix);
+        var time =
+            (dateObj.getHours() < 10 ? "0" + dateObj.getHours() : dateObj.getHours()) + ":"
+            + (dateObj.getMinutes() < 10 ? "0" + dateObj.getMinutes() : dateObj.getMinutes()) + ":"
+            + (dateObj.getSeconds() < 10 ? "0" + dateObj.getSeconds() : dateObj.getSeconds());
+        this.setState({ startTimeInput: time });
+        console.log("Time Input: " + time);
+    }
+
+    handleChangeEndTimeInput = (timeUnix) => {
+        console.log("AppointmentList.handleChangeEndTimeInput()");
+        console.log("Time Unix Input: " + timeUnix);
+        this.setState({ endTimeUnixInput: timeUnix });
+        var dateObj = new Date(timeUnix);
+        var time =
+            (dateObj.getHours() < 10 ? "0" + dateObj.getHours() : dateObj.getHours()) + ":"
+            + (dateObj.getMinutes() < 10 ? "0" + dateObj.getMinutes() : dateObj.getMinutes()) + ":"
+            + (dateObj.getSeconds() < 10 ? "0" + dateObj.getSeconds() : dateObj.getSeconds());
+        this.setState({ endTimeInput: time });
+        console.log("Time Input: " + time);
     }
 
     async populateAppointmentGuestDetails() {
@@ -144,10 +247,50 @@ export default class Appointment extends Component {
                             </Stack>
                         </Box>
                         <Box>
-                            Edit (Evenutally)
+                            <Fab
+                                color="primary"
+                                aria-label="edit"
+                                style={{ textAlign: "center" }}
+                                onClick={this.handleOpenEditMenu} >
+                                <EditOutlinedIcon />
+                            </Fab>
                         </Box>
                     </Stack>
                 </CardContent>
+                <Dialog open={this.state.editing} onClose={this.handleCloseEditMenu}>
+                    <DialogTitle>Reschedule Appointment</DialogTitle>
+                    <Stack spacing={1}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Date"
+                                inputFormat="YYYY-MM-DD"
+                                value={this.state.dateUnixInput}
+                                onChange={this.handleChangeDateInput}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </LocalizationProvider>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <TimePicker
+                                label="Start Time"
+                                value={this.state.startTimeUnixInput}
+                                onChange={this.handleChangeStartTimeInput}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </LocalizationProvider>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <TimePicker
+                                label="End Time"
+                                value={this.state.endTimeUnixInput}
+                                onChange={this.handleChangeEndTimeInput}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </LocalizationProvider>
+                    </Stack>
+                    <DialogActions>
+                        <Button onClick={this.handleEditAppointment}>Apply</Button>
+                        <Button onClick={this.handleCloseEditMenu}>Cancel</Button>
+                    </DialogActions>
+                </Dialog>
             </Card>
         );
     }

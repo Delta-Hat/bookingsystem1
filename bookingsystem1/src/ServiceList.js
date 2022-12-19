@@ -16,9 +16,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { CircularProgress } from '../node_modules/@mui/material/index';
+import CircularProgress from '@mui/material/CircularProgress';
 import InputAdornment from '@mui/material/InputAdornment';
-
+import Box from '@mui/material/Box';
 
 
 export default class ServiceList extends Component {
@@ -112,26 +112,30 @@ export default class ServiceList extends Component {
             <div>
                 <Card sx={{ minHeight: 600, minWidth: 260 }}>
                     <CardContent>
-                        <Stack divider={<Divider orientation="horizontal" flexItem />} spacing={0.3}>
-                            <Typography variant="h5">
-                                Services
-                            </Typography>
-                            <Grid container position="relative">
-                                <Grid container justifyContent="center" alignItems="flex-end" direction="row">
-                                    {serviceList}
+                        <Box sx={{ minHeight: 490 }}>
+                            <Stack divider={<Divider orientation="horizontal" flexItem />} spacing={0.3}>
+                                <Typography variant="h5">
+                                    Services
+                                </Typography>
+                                <Grid container position="relative">
+                                    <Grid container justifyContent="center" alignItems="flex-end" direction="row">
+                                        {serviceList}
+                                    </Grid>
                                 </Grid>
-                                <Grid container justifyContent="center" alignItems="flex-end" direction="row">
-                                    <Fab
-                                        color="primary"
-                                        aria-label="add"
-                                        style={{ textAlign: "center" }}
-                                        onClick={this.handleOpenNewServiceMenu}
-                                    >
-                                        <AddIcon />
-                                    </Fab>
-                                </Grid>
+                            </Stack>
+                        </Box>
+                        <Box sx={{ mt: 2 }} display="flex" alignItems="flex-end">
+                            <Grid container justifyContent="center" alignItems="flex-end" direction="row">
+                                <Fab
+                                    color="primary"
+                                    aria-label="add"
+                                    style={{ textAlign: "center" }}
+                                    onClick={this.handleOpenNewServiceMenu}
+                                >
+                                    <AddIcon />
+                                </Fab>
                             </Grid>
-                        </Stack>
+                        </Box>
                     </CardContent>
                     <Dialog open={this.state.creatingNewService} onClose={this.handleCloseNewServiceMenu}>
                         <DialogTitle>Create New Service</DialogTitle>
