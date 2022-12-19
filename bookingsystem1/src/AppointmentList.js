@@ -33,6 +33,13 @@ export default class AppointmentList extends Component {
 
     constructor(props) {
         super(props);
+        var unixDate = Date.now();
+        var currentDate = new Date(unixDate);
+        var date = currentDate.getFullYear()
+            + "-" + ((currentDate.getMonth() + 1) < 10 ? "0" + (currentDate.getMonth() + 1) : (currentDate.getMonth()) + 1)
+            + "-" + (currentDate.getDate() < 10 ? "0" + currentDate.getDate() : currentDate.getDate());
+        console.log(unixDate);
+        console.log(date);
         this.state = {
             appointments: [],
             loading: true,
@@ -46,7 +53,9 @@ export default class AppointmentList extends Component {
             startTimeUnixInput: null,
             startTimeInput: "",
             endTimeUnixInput: null,
-            endTimeInput: ""
+            endTimeInput: "",
+            queryUnixDate: unixDate,
+            queryDate: date
         }
         this.handleChangeGuestInput = this.handleChangeGuestInput.bind(this);
         this.handleChangeStaffInput = this.handleChangeStaffInput.bind(this);
@@ -60,10 +69,18 @@ export default class AppointmentList extends Component {
         this.setState({ loading: true });
     }
 
-    async populateAppointmentData() {
+    populateAppointmentData = async () => {
         console.log('AppointmentList.populateAppointmentData()');
-        //we're gonna need to modify the GET method in appointments to accept some kind of date param
-        const response = await fetch('api/appointments');
+        console.log('render Date: ' + this.state.queryDate);
+        const response = await fetch('api/appointments/bydate/' + this.state.queryDate);
+        const data = await response.json();
+        this.setState({ appointments: data, loading: false });
+    }
+
+    populateAppointmentDateWithNewDate = async (newDate) => {
+        console.log('AppointmentList.populateAppointmentDateWithNewDate()');
+        console.log('render Date: ' + newDate);
+        const response = await fetch('api/appointments/bydate/' + newDate);
         const data = await response.json();
         this.setState({ appointments: data, loading: false });
     }
@@ -201,10 +218,24 @@ export default class AppointmentList extends Component {
         console.log("Time Input: " + time);
     }
 
+    handleChangeQueryDate = async (dateUnix) => {
+        console.log("AppointmentList.handleChangeQueryDate()");
+
+        var dateObj = new Date(dateUnix)
+        var date = dateObj.getFullYear()
+            + "-" + ((dateObj.getMonth() + 1) < 10 ? "0" + (dateObj.getMonth() + 1) : (dateObj.getMonth()) + 1)
+            + "-" + (dateObj.getDate() < 10 ? "0" + dateObj.getDate() : dateObj.getDate());
+        console.log("changing date to: " + date);
+        this.setState({ queryDate: date, queryUnixDate: dateUnix })
+        console.log("date is now: " + this.state.queryDate);
+        this.populateAppointmentDateWithNewDate(date);
+    }
+
 
     render() {
         console.log("AppointmentList.render()");
         console.log(this.props.guests);
+        console.log(this.state.queryDate);
         let appointmentList = this.state.loading
             ? <CircularProgress />
             : AppointmentList.renderAppointments(this.state.appointments, this.requeryAppointmentsListener);
@@ -215,14 +246,25 @@ export default class AppointmentList extends Component {
                     <CardContent>
                         <Box sx={{ minHeight: 490 }}>
                             <Stack
-                                divider={<Divider orientation="horizontal" flexItem />} spacing={0.3}
+                                divider={<Divider orientation="horizontal" flexItem />} spacing={1.1}
                             >
                                 <Typography variant="h5">
                                     Appointments
                                 </Typography>
-                                <Grid container justifyContent="center" direction="row">
-                                    {appointmentList}
-                                </Grid>
+                                <Stack spacing={1}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DatePicker
+                                            label="Date"
+                                            inputFormat="YYYY-MM-DD" //I'm partial to this data format. Plus, it's how DateTime is stored in the API.
+                                            value={this.state.queryUnixDate}
+                                            onChange={this.handleChangeQueryDate}
+                                            renderInput={(params) => <TextField {...params} />}
+                                        />
+                                    </LocalizationProvider>
+                                    <Grid container justifyContent="center" direction="row">
+                                        {appointmentList}
+                                    </Grid>
+                                </Stack>
                             </Stack>
                         </Box>
                         <Box sx={{ mt: 2 }} display="flex" alignItems="flex-end">
