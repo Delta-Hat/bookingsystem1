@@ -19,21 +19,23 @@ import TextField from '@mui/material/TextField';
 import { CircularProgress } from '../node_modules/@mui/material/index';
 import InputAdornment from '@mui/material/InputAdornment';
 
-const formatter = new Intl.NumberFormat('en-US', {
-    style: 'decimal',
-});
+
 
 export default class ServiceList extends Component {
     static displayName = ServiceList.name;
 
     constructor(props) {
         super(props);
-        this.state = { services: [], loading: true, creatingNewService: false };
+        this.state = {  loading: true, creatingNewService: false };
+        this.requeryServiceData = props.listeners.serviceListener;
     }
 
+
+    /*
     componentDidMount() {
         this.populateServiceData();
     }
+    */
 
     handleOpenNewServiceMenu = () => {
         console.log("ServiceList.handleOpenNewServiceMenu()");
@@ -61,11 +63,7 @@ export default class ServiceList extends Component {
         ) {
             return;
         }
-        var postBody = {
-            "name": nameInput,
-            "category": categoryInput,
-            "price": priceInput
-        }
+        
         const response = await fetch("api/services", {
             method: "POST",
             headers: {
@@ -84,7 +82,7 @@ export default class ServiceList extends Component {
             price: priceInput 
         }));
         
-        this.populateServiceData();
+        this.requeryServiceData();
         this.setState({ creatingNewService: false });
     }
 
@@ -104,17 +102,12 @@ export default class ServiceList extends Component {
         );
     }
 
-    async populateServiceData() {
-        console.log("ServiceList.populateServiceData()");
-        const response = await fetch("api/services");
-        const data = await response.json();
-        this.setState({ services: data, loading: false });
-    }
+    
 
     render() {
-        let serviceList = this.state.loading
+        let serviceList = this.props.loading
             ? <CircularProgress />
-            : ServiceList.renderServices(this.state.services);
+            : ServiceList.renderServices(this.props.services);
         return (
             <div>
                 <Card sx={{ minHeight: 600, minWidth: 260 }}>

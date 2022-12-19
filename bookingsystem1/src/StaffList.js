@@ -23,12 +23,15 @@ export default class StaffList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { staffs: [], loading: true, creatingNewStaff: false };
+        this.state = { creatingNewStaff: false };
+        this.requeryStaffData = props.listeners.staffListener;
     }
 
+    /*
     componentDidMount() {
         this.populateStaffData();
     }
+    */
 
     handleOpenNewStaffMenu = () => {
         console.log("StaffList.handleOpenNewStaffMenu()");
@@ -67,7 +70,7 @@ export default class StaffList extends Component {
         });
         console.log(response.headers);
         console.log(response.json());
-        this.populateStaffData();
+        this.requeryStaffData();
         this.setState({ creatingNewStaff: false });
     }
 
@@ -87,17 +90,12 @@ export default class StaffList extends Component {
         );
     }
 
-    async populateStaffData() {
-        console.log("StaffList.populateStaffData()");
-        const response = await fetch("api/staffs");
-        const data = await response.json();
-        this.setState({ staffs: data, loading: false });
-    }
+    
 
     render() {
-        let staffList = this.state.loading
+        let staffList = this.props.loading
             ? <CircularProgress />
-            : StaffList.renderStaffs(this.state.staffs);
+            : StaffList.renderStaffs(this.props.staffs);
         return (
             <div>
                 <Card sx={{ minHeight: 600, minWidth: 260 }}>

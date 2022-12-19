@@ -23,27 +23,29 @@ export default class GuestList extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { guests: [], loading: true, creatingNewGuest: false, overState:props.overState };
+        this.state = {  creatingNewGuest: false, overState:props.overState };
         //this.handleCloseNewGuestMenu = this.handleCloseNewGuestMenu.bind(this);
         //this.handleOpenNewGuestMenu = this.handleOpenNewGuestMenu.bind(this);
-        this.appFunction = props.listeners.guestListener;
+        this.requeryGuestData = props.listeners.guestListener;
 
     }
 
+    /*
     componentDidMount() {
         this.populateGuestData();
     }
+    
 
     componentDidUpdate() {
         //TODO update list
         console.log("GuestList.componentDidUpdate()")
         //this.setState({ overState: this.props.overState });
     }
+    */
 
     handleOpenNewGuestMenu = () => {
         console.log("GuestList.handleOpenNewGuestMenu()");
         this.setState({ creatingNewGuest: true });
-        this.appFunction();
     };
 
     handleCloseNewGuestMenu = () => {
@@ -76,7 +78,7 @@ export default class GuestList extends Component {
         });
         console.log(response.headers);
         console.log(response.json());
-        this.populateGuestData();
+        this.requeryGuestData();
         this.setState({ creatingNewGuest: false });
     };
 
@@ -84,9 +86,9 @@ export default class GuestList extends Component {
         console.log("GuestList.render()");
         console.log("Test state at sub render: " + this.state.overState);
         console.log("Test props at sub render: " + this.props.overState);
-        let guestList = this.state.loading
+        let guestList = this.props.loading
             ? <CircularProgress />
-            : GuestList.renderGuests(this.state.guests);
+            : GuestList.renderGuests(this.props.guests);
         return (
             <div>
                 <Card sx={{ minHeight: 600, minWidth:260 }}>
@@ -171,10 +173,5 @@ export default class GuestList extends Component {
         );
     }
 
-    async populateGuestData() {
-        console.log('GuestList.populateGuestData()');
-        const response = await fetch('api/guests');
-        const data = await response.json();
-        this.setState({ guests: data, loading: false });
-    }
+    
 }

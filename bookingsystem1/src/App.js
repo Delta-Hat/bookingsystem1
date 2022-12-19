@@ -11,31 +11,61 @@ export default class App extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { forecasts: [], loading: true , testState: true};
+        this.state = {
+            testState: true,
+            guests: [],
+            loadingGuests: true,
+            staffs: [],
+            loadingStaffs: true,
+            services: [],
+            loadingServices: true
+        };
     }
 
     
-    requeryGuestListener = () => {
-        console.log("App.requeryGuestListener()");
-        console.log("Test state: " + this.state.testState);
-        console.log("What it will be: " + !this.state.testState);
-        this.setState({
-            testState: !this.state.testState,
-            guests: [],
-            loadingGuests: true
-        });
-        
+    
+
+    componentDidMount() {
+        this.populateGuestData();
+        this.populateStaffData();
+        this.populateServiceData();
+    }
+    
+
+    async populateGuestData() {
+        console.log('GuestList.populateGuestData()');
+        const response = await fetch('api/guests');
+        const data = await response.json();
+        this.setState({ guests: data, loading: false });
     }
 
-    async populateAppointmentGuestDetails() {
-        console.log("Appointment.populateAppointmentGuestDetails()");
-        const response = await fetch("api/guests/" + this.state.appointment.guestId.toString());
+    async populateStaffData() {
+        console.log("StaffList.populateStaffData()");
+        const response = await fetch("api/staffs");
         const data = await response.json();
-        this.setState({
-            guestFirstName: data.firstName,
-            guestLastName: data.lastName,
-            loadingGuest: false
-        });
+        this.setState({ staffs: data, loading: false });
+    }
+
+    async populateServiceData() {
+        console.log("ServiceList.populateServiceData()");
+        const response = await fetch("api/services");
+        const data = await response.json();
+        this.setState({ services: data, loading: false });
+    }
+
+    requeryGuestsListener = () => {
+        console.log("App.requeryGuestListener()");
+        this.populateGuestData();
+    }
+
+    requeryStaffsListener = () => {
+        console.log("App.requeryStaffsListener()");
+        this.populateStaffData();
+    }
+
+    requeryServicesListener = () => {
+        console.log("App.requeryServiceListener()");
+        this.populateServiceData();
     }
 
     render() {
@@ -46,14 +76,29 @@ export default class App extends Component {
             <div>
                 <Stack direction="row" spacing={1}>
                     <GuestList
-                        listeners={{ guestListener: this.requeryGuestListener }}
+                        listeners={{ guestListener: this.requeryGuestsListener }}
                         overState={this.state.testState}
                         guests={this.state.guests}
                         loadingGuests={this.state.loadingGuests}
                     />
-                    <StaffList />
-                    <ServiceList />
-                    <AppointmentList/>
+                    <StaffList
+                        listeners={{ staffListener: this.requeryStaffsListener }}
+                        staffs={this.state.staffs}
+                        loadingStaffs={this.state.loadingStaffs}
+                    />
+                    <ServiceList
+                        listeners={{ serviceListener: this.requeryServicesListener }}
+                        services={this.state.services}
+                        loadingServices={this.state.loadingServices}
+                    />
+                    <AppointmentList
+                        guests={this.state.guests}
+                        staffs={this.state.staffs}
+                        services={this.state.services}
+                        loadingGuests={this.state.loadingGuests}
+                        loadingStaffs={this.state.loadingStaffs}
+                        loadingServices={this.state.loadingServices}
+                    />
                 </Stack>
                 <DebugList/>
             </div>
